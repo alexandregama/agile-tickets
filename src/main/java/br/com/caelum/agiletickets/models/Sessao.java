@@ -16,6 +16,8 @@ import org.joda.time.format.DateTimeFormat;
 @Entity
 public class Sessao {
 
+	private static final Locale LOCALE_BRASIL = new Locale("pt", "BR");
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -66,11 +68,11 @@ public class Sessao {
 	}
 
 	public String getDia() {
-		return inicio.toString(DateTimeFormat.shortDate().withLocale(new Locale("pt", "BR")));
+		return inicio.toString(DateTimeFormat.shortDate().withLocale(LOCALE_BRASIL));
 	}
 
 	public String getHora() {
-		return inicio.toString(DateTimeFormat.shortTime().withLocale(new Locale("pt", "BR")));
+		return inicio.toString(DateTimeFormat.shortTime().withLocale(LOCALE_BRASIL));
 	}
 
 	public Integer getTotalIngressos() {
@@ -90,30 +92,18 @@ public class Sessao {
 	}
 
 	public Integer getIngressosDisponiveis() {
-		// faz a conta de total de ingressos menos ingressos reservados
 		return totalIngressos - ingressosReservados;
 	}
 	
-	// Era usada antes no sistema para avisar o cliente de que
-    // os ingressos estavam acabando!
-    // Hoje nao serve pra nada, mas eh sempre bom ter
-    // um backup guardado! ;)
-    public boolean pertoDoLimiteDeSeguranca_NaoUtilizada()
-    {
-            int limite = 3;
-            return getIngressosDisponiveis() > limite;
-    }
-
 	public void reserva(Integer numeroDeIngressos) {
-		// soma quantidade na variavel ingressos reservados
 		this.ingressosReservados += numeroDeIngressos;
 	}
 
-	public boolean podeReservar(Integer numeroDeIngressos) {
-		int sobraram = getIngressosDisponiveis() - numeroDeIngressos;
-        boolean naoTemEspaco = sobraram <= 0;
+	public boolean podeReservar(Integer numeroDeIngressosDesejados) {
+		int sobraram = getIngressosDisponiveis() - numeroDeIngressosDesejados;
+        boolean temEspaco = sobraram >= 0;
 
-        return !naoTemEspaco;
+        return temEspaco;
 	}
 
 	public void setPreco(BigDecimal preco) {

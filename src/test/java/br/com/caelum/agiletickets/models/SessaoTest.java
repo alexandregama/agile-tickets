@@ -1,6 +1,9 @@
 package br.com.caelum.agiletickets.models;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class SessaoTest {
@@ -10,15 +13,7 @@ public class SessaoTest {
 		Sessao sessao = new Sessao();
         sessao.setTotalIngressos(2);
 
-        Assert.assertTrue(sessao.podeReservar(1));
-	}
-	
-	@Test
-	public void deveVender5ingressosSeHa10vagas() throws Exception {
-		Sessao sessao = new Sessao();
-		sessao.setTotalIngressos(10);
-		
-		Assert.assertTrue(sessao.podeReservar(5));
+        assertTrue(sessao.podeReservar(1));
 	}
 
 	@Test
@@ -26,16 +21,24 @@ public class SessaoTest {
 		Sessao sessao = new Sessao();
 		sessao.setTotalIngressos(2);
 
-		Assert.assertFalse(sessao.podeReservar(3));
+		assertFalse(sessao.podeReservar(3));
 	}
 
+	@Test
+	public void deveriaVender1IngressoSeHaSomente1Vaga() throws Exception {
+		Sessao sessao = new Sessao();
+		sessao.setTotalIngressos(1);
+		
+		assertTrue(sessao.podeReservar(1));
+	}
+	
 	@Test
 	public void reservarIngressosDeveDiminuirONumeroDeIngressosDisponiveis() throws Exception {
 		Sessao sessao = new Sessao();
 		sessao.setTotalIngressos(5);
 
 		sessao.reserva(3);
-		Assert.assertEquals(2, sessao.getIngressosDisponiveis().intValue());
+		assertEquals(2, sessao.getIngressosDisponiveis().intValue());
 	}
 	
 }

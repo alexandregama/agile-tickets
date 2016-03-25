@@ -51,7 +51,6 @@ public class EspetaculosController {
 
 	@Get("/espetaculos")
 	public List<Espetaculo> lista() {
-		// inclui a lista de estabelecimentos
 		result.include("estabelecimentos", estabelecimentos.todos());
 		return agenda.espetaculos();
 	}
@@ -81,8 +80,6 @@ public class EspetaculosController {
 	public void cadastraSessoes(Long espetaculoId, LocalDate inicio, LocalDate fim, LocalTime horario, Periodicidade periodicidade) {
 		Espetaculo espetaculo = carregaEspetaculo(espetaculoId);
 
-		// aqui faz a magica!
-		// cria sessoes baseado no periodo de inicio e fim passados pelo usuario
 		List<Sessao> sessoes = espetaculo.criaSessoes(inicio, fim, horario, periodicidade);
 
 		agenda.agende(sessoes);
@@ -108,16 +105,13 @@ public class EspetaculosController {
 			result.notFound();
 			return;
 		}
-
 		if (quantidade < 1) {
 			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
 		}
-
 		if (!sessao.podeReservar(quantidade)) {
-			validator.add(new SimpleMessage("", "Não existem ingressos disponíveis"));
+			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
 		}
-
-		// em caso de erro, redireciona para a lista de sessao
+		
 		validator.onErrorRedirectTo(this).sessao(sessao.getId());
 
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, quantidade);
