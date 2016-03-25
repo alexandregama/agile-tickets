@@ -9,15 +9,20 @@
 		<conf name="test" description="dependencies used for tests" visibility="public" />
 		<conf name="acceptance-test" description="dependencies used for acceptance tests" visibility="public" />
 		<conf name="minify" description="dependencies used to minify js and css" visibility="public" />
+		<conf name="binary" description="provide only binary files"/>
+		<conf name="development" extends="binary" description="provide binary files with javadoc and sources"/>
+		<conf name="compile" description="jars used for compilation classpath"/>
+		<conf name="sources" description="Source jars"/>
 	</configurations>
 
 	<dependencies>
-		<dependency org="br.com.caelum" name="vraptor" rev="4.1.3" conf="default"/>
+		<dependency org="br.com.caelum" name="vraptor" rev="4.1.3" conf="default;compile->default;sources->sources"/>
+		<dependency org="org.assertj" name="assertj-core" rev="3.3.0" conf="default"/>
 		<dependency org="org.jboss.weld.servlet" name="weld-servlet-core" rev="2.1.2.Final" conf="default" />
 		<dependency org="org.jboss.weld" name="weld-core-impl" rev="2.1.2.Final" conf="default"  />
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.9"  conf="default" />
-		<dependency org="br.com.caelum.vraptor" name="vraptor-jpa" rev="4.0.2" conf="default"/>
-		<dependency org="br.com.caelum.vraptor" name="vraptor-jodatime" rev="4.0.0.Final" conf="default"/>
+		<dependency org="br.com.caelum.vraptor" name="vraptor-jpa" rev="4.0.2" conf="default;compile->default;sources->sources"/>
+		<dependency org="br.com.caelum.vraptor" name="vraptor-jodatime" rev="4.0.0.Final" conf="default;compile->default;sources->sources"/>
 		<dependency org="mysql" name="mysql-connector-java" rev="5.1.34" conf="default"/>
 		<dependency org="opensymphony" name="sitemesh" rev="2.4.2" conf="default" />
 		<dependency org="javax.servlet" name="jstl" rev="1.2" conf="default" />

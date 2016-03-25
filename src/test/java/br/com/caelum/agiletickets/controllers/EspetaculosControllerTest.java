@@ -1,16 +1,30 @@
 package br.com.caelum.agiletickets.controllers;
 
-import java.math.BigDecimal;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.caelum.agiletickets.domain.Agenda;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
 import br.com.caelum.agiletickets.models.Espetaculo;
+import br.com.caelum.agiletickets.models.Periodicidade;
 import br.com.caelum.agiletickets.models.Sessao;
 import br.com.caelum.agiletickets.models.TipoDeEspetaculo;
 import br.com.caelum.vraptor.Result;
@@ -18,26 +32,29 @@ import br.com.caelum.vraptor.util.test.MockResult;
 import br.com.caelum.vraptor.util.test.MockValidator;
 import br.com.caelum.vraptor.validator.ValidationException;
 import br.com.caelum.vraptor.validator.Validator;
-import static org.hamcrest.Matchers.is;
 
-import static org.junit.Assert.assertThat;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
-
+@RunWith(MockitoJUnitRunner.class)
 public class EspetaculosControllerTest {
 
-	private @Mock Agenda agenda;
-	private @Mock DiretorioDeEstabelecimentos estabelecimentos;
-	private @Spy Validator validator = new MockValidator();
-	private @Spy Result result = new MockResult();
+	@Mock
+	private Agenda agenda;
+	@Mock
+	private DiretorioDeEstabelecimentos estabelecimentos;
+	@Spy 
+	private Validator validator = new MockValidator();
+	@Spy
+	private Result result = new MockResult();
+	
+	private LocalTime horario = LocalTime.now();
+	
+	private LocalDate fim = LocalDate.now();
+	
+	private LocalDate inicio = LocalDate.now();
 	
 	private EspetaculosController controller;
-
+	
 	@Before
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
+	public void setup() {
 		controller = new EspetaculosController(result, validator, agenda, estabelecimentos);
 	}
 
@@ -101,6 +118,17 @@ public class EspetaculosControllerTest {
 
 		verifyZeroInteractions(result);
 	}
+	
+	@Test
+	public void deveriaIncluirASessaoNoResultQuandoUsuarioBuscarUmaSessaoEElaExistir() throws Exception {
+		Sessao sessao = new Sessao();
+		
+		when(agenda.sessao(1L)).thenReturn(sessao);
+		
+		controller.sessao(1L);
+		
+		verify(result).include("sessao", sessao);
+	}
 
 	@Test
 	public void deveReservarSeASessaoTemIngressosSuficientes() throws Exception {
@@ -119,4 +147,62 @@ public class EspetaculosControllerTest {
 		assertThat(sessao.getIngressosDisponiveis(), is(2));
 	}
 
+	@Test(expected = ValidationException.class)
+	public void deveriaLancarExcecaoDeValidacaoQuandoUsuarioCadastrarUmaSessaoDeEspetaculoQueNaoExiste() throws Exception {
+		controller.cadastraSessoes(12L, LocalDate.now(), LocalDate.now(), LocalTime.now(), Periodicidade.DIARIA);
+		
+		when(agenda.espetaculo(12L)).thenReturn(null);
+	}
+	
+	@Test
+	public void deveriaCriarUmaSessaoQuandoUsuarioCadastrarUmaSessaoValida() throws Exception {
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		controller.cadastraSessoes(12L, inicio, inicio, horario, Periodicidade.DIARIA);
+		
+		verify(espetaculo).criaSessoes(inicio, fim, horario, Periodicidade.DIARIA);
+	}
+	
+	@Test
+	public void deveriaAgendarUmaNovaSessaoQuandoOUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(agenda).agende(sessoes);
+	}
+	
+	@Test
+	public void deveriaAdicionaUmaMensagemDeSucessoQuandoUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(result).include("message", sessoes.size() + " sessões criadas com sucesso");
+	}
+
+	@Test
+	public void deveriaRedirecionarParaAListaDeSessoesQuandoUsuarioCadastrarUmaSessaoValida() throws Exception {
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		EspetaculosController spyController = spy(controller);
+		when(result.redirectTo(EspetaculosController.class)).thenReturn(spyController);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(spyController).lista();
+	}
 }

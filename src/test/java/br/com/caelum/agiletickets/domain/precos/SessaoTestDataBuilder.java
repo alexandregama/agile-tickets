@@ -24,7 +24,7 @@ public class SessaoTestDataBuilder {
 		return this;
 	}
 
-	public SessaoTestDataBuilder comOPreco(double preco) {
+	public SessaoTestDataBuilder custando(double preco) {
 		this.preco = BigDecimal.valueOf(preco);
 		return this;
 	}
