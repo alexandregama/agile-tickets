@@ -39,6 +39,8 @@ public class Sessao {
 
 	private BigDecimal preco;
 
+	private BigDecimal precoFinal = BigDecimal.ZERO;
+
 	public Long getId() {
 		return id;
 	}
@@ -118,8 +120,13 @@ public class Sessao {
 		return dataCriacao;
 	}
 
-	public BigDecimal acressentaNoPrecoAPorcentagemDe(Double porcentagem) {
-		return preco.add(preco.multiply(BigDecimal.valueOf(porcentagem)));
+	public BigDecimal acressentaNoPrecoFinalAPorcentagemDe(Double porcentagem) {
+		if (precoFinal.equals(BigDecimal.ZERO)) {
+			precoFinal = precoFinal.add(preco);
+		}
+		precoFinal = precoFinal.add(preco.multiply(BigDecimal.valueOf(porcentagem)));
+		
+		return precoFinal;
 	}
 	
 }

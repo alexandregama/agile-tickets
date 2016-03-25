@@ -11,7 +11,7 @@ public class CalculadoraDePrecoPorShowECinema implements CalculadoraDePrecoPorEs
 		BigDecimal novoPreco = BigDecimal.ZERO;
 
 		if (existemMenosQueCincoPorCentoDosIngressosNa(sessao)) {
-			novoPreco = sessao.acressentaNoPrecoAPorcentagemDe(0.10);
+			novoPreco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.10);
 		} else {
 			novoPreco = sessao.getPreco();
 		}

@@ -49,7 +49,7 @@ public class SessaoTest {
 		Sessao sessao = new Sessao();
 		sessao.setPreco(BigDecimal.TEN);
 		
-		BigDecimal novoPreco = sessao.acressentaNoPrecoAPorcentagemDe(0.10);
+		BigDecimal novoPreco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.10);
 		
 		assertThat(novoPreco).isEqualTo(BigDecimal.valueOf((11.0)));
 	}

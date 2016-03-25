@@ -11,13 +11,13 @@ public class CalculadoraDePrecosPorBallet implements CalculadoraDePrecoPorEspeta
 		BigDecimal preco = BigDecimal.ZERO;
 		
 		if(existemMenosQueCincoPorCentoDeIngressosNa(sessao)) { 
-			preco = sessao.acressentaNoPrecoAPorcentagemDe(0.20);
+			preco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.20);
 		} else {
 			preco = sessao.getPreco();
 		}
 		
 		if(sessao.getDuracaoEmMinutos() > 60){
-			preco = sessao.acressentaNoPrecoAPorcentagemDe(0.10);
+			preco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.10);
 		}
 		return preco;
 	}

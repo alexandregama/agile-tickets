@@ -9,16 +9,21 @@ public class CalculadoraDePrecosPorOrquestra implements CalculadoraDePrecoPorEsp
 	@Override
 	public BigDecimal calcula(Sessao sessao, Integer quantidadeDeIngressos) {
 		BigDecimal preco = BigDecimal.ZERO;
-		if((sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.50) { 
-			preco  = sessao.getPreco().add(sessao.getPreco().multiply(BigDecimal.valueOf(0.20)));
+		
+		if (existemMenosQueCincoPorCentoDeIngressosNa(sessao)) {
+			preco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.20);
 		} else {
 			preco = sessao.getPreco();
 		}
 
-		if(sessao.getDuracaoEmMinutos() > 60){
-			preco = preco.add(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
+		if (sessao.getDuracaoEmMinutos() > 60) {
+			preco = sessao.acressentaNoPrecoFinalAPorcentagemDe(0.10);
 		}
 		return preco;
+	}
+
+	private boolean existemMenosQueCincoPorCentoDeIngressosNa(Sessao sessao) {
+		return (sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.50;
 	}
 
 }
