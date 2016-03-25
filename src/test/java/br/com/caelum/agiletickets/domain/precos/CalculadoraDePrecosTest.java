@@ -1,5 +1,7 @@
 package br.com.caelum.agiletickets.domain.precos;
 
+import static java.math.BigDecimal.valueOf;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
@@ -12,16 +14,16 @@ import br.com.caelum.agiletickets.models.TipoDeEspetaculo;
 public class CalculadoraDePrecosTest {
 
 	@Test
-	public void deveConsiderarQuantidadeAoCalcularPrecoTotal(){
+	public void deveConsiderarQuantidadeAoCalcularPrecoTotalParaSessaoEmTeatro(){
 		Sessao sessao =	SessaoTestDataBuilder
 			.umaSessao()
 			.deUmEspetaculoDoTipo(TipoDeEspetaculo.TEATRO)
-			.comOPreco(10.0)
+			.custando(10.0)
 			.build();
 		
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 9);
 		
-		assertEquals(0, BigDecimal.valueOf(90.0).compareTo(precoTotal));
+		assertThat(precoTotal).isEqualTo(valueOf(90.0));
 	}
 	
 	@Test
@@ -31,7 +33,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.CINEMA)
 				.comTotalIngressos(100)
 				.comIngressoReservados(95)
-				.comOPreco(20.0)
+				.custando(20.0)
 				.build();
 
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
@@ -46,7 +48,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.CINEMA)
 				.comTotalIngressos(100)
 				.comIngressoReservados(10)
-				.comOPreco(20.0)
+				.custando(20.0)
 				.build();
 
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
@@ -61,7 +63,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.SHOW)
 				.comTotalIngressos(200)
 				.comIngressoReservados(195)
-				.comOPreco(100.0)
+				.custando(100.0)
 				.build();
 
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
@@ -76,7 +78,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.SHOW)
 				.comTotalIngressos(200)
 				.comIngressoReservados(15)
-				.comOPreco(100.0)
+				.custando(100.0)
 				.build();
 
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
@@ -91,7 +93,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.BALLET)
 				.comTotalIngressos(50)
 				.comIngressoReservados(25)
-				.comOPreco(500.0)
+				.custando(500.0)
 				.comDuracaoEmMinutos(50)
 				.build();
 		
@@ -107,7 +109,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.BALLET)
 				.comTotalIngressos(50)
 				.comIngressoReservados(5)
-				.comOPreco(500.0)
+				.custando(500.0)
 				.comDuracaoEmMinutos(50)
 				.build();
 
@@ -123,7 +125,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.BALLET)
 				.comTotalIngressos(50)
 				.comIngressoReservados(5)
-				.comOPreco(500.0)
+				.custando(500.0)
 				.comDuracaoEmMinutos(100)
 				.build();
 
@@ -139,7 +141,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.ORQUESTRA)
 				.comTotalIngressos(70)
 				.comIngressoReservados(40)
-				.comOPreco(1000.0)
+				.custando(1000.0)
 				.comDuracaoEmMinutos(60)
 				.build();
 		
@@ -155,7 +157,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.ORQUESTRA)
 				.comTotalIngressos(70)
 				.comIngressoReservados(10)
-				.comOPreco(1000.0)
+				.custando(1000.0)
 				.comDuracaoEmMinutos(60)
 				.build();
 
@@ -171,7 +173,7 @@ public class CalculadoraDePrecosTest {
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.ORQUESTRA)
 				.comTotalIngressos(70)
 				.comIngressoReservados(65)
-				.comOPreco(1000.0)
+				.custando(1000.0)
 				.comDuracaoEmMinutos(120)
 				.build();
 
@@ -185,7 +187,7 @@ public class CalculadoraDePrecosTest {
 		Sessao sessao =	SessaoTestDataBuilder
 				.umaSessao()
 				.deUmEspetaculoDoTipo(TipoDeEspetaculo.TEATRO)
-				.comOPreco(10.0)
+				.custando(10.0)
 				.build();
 		
 		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, 1);
