@@ -10,17 +10,17 @@ import br.com.caelum.agiletickets.domain.Relogio;
 import br.com.caelum.agiletickets.models.Espetaculo;
 import br.com.caelum.agiletickets.models.Sessao;
 
-public class JPAEspetaculoDao implements Agenda {
+public class JpaEspetaculoDao implements Agenda {
 
 	private EntityManager manager;
 	private Relogio relogio;
 	
 	/** @deprecated CDI eyes only*/
-	protected JPAEspetaculoDao() {
+	JpaEspetaculoDao() {
 	}
 
 	@Inject
-	public JPAEspetaculoDao(EntityManager manager, Relogio relogio) {
+	public JpaEspetaculoDao(EntityManager manager, Relogio relogio) {
 		this.manager = manager;
 		this.relogio = relogio;
 	}

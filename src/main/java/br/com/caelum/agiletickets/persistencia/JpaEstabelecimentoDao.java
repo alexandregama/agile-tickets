@@ -8,16 +8,16 @@ import javax.persistence.EntityManager;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
 import br.com.caelum.agiletickets.models.Estabelecimento;
 
-public class JPAEstabelecimentoDao implements DiretorioDeEstabelecimentos {
+public class JpaEstabelecimentoDao implements DiretorioDeEstabelecimentos {
 
 	private EntityManager manager;
 	
 	/** @deprecated CDI eyes only*/
-	protected JPAEstabelecimentoDao() {
+	JpaEstabelecimentoDao() {
 	}
 	
 	@Inject
-	public JPAEstabelecimentoDao(EntityManager manager) {
+	public JpaEstabelecimentoDao(EntityManager manager) {
 		this.manager = manager;
 	}
 
