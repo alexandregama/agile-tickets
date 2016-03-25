@@ -84,7 +84,7 @@ public class EspetaculosController {
 		agenda.agende(sessoes);
 
 		result.include("message", sessoes.size() + " sessões criadas com sucesso");
-		result.redirectTo(this).lista();
+		result.redirectTo(EspetaculosController.class).lista();
 	}
 	
 	@Get("/sessao/{id}")

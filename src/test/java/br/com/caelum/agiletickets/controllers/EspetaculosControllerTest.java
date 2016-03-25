@@ -4,6 +4,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -44,8 +45,14 @@ public class EspetaculosControllerTest {
 	@Spy
 	private Result result = new MockResult();
 	
+	private LocalTime horario = LocalTime.now();
+	
+	private LocalDate fim = LocalDate.now();
+	
+	private LocalDate inicio = LocalDate.now();
+	
 	private EspetaculosController controller;
-
+	
 	@Before
 	public void setup() {
 		controller = new EspetaculosController(result, validator, agenda, estabelecimentos);
@@ -149,10 +156,6 @@ public class EspetaculosControllerTest {
 	
 	@Test
 	public void deveriaCriarUmaSessaoQuandoUsuarioCadastrarUmaSessaoValida() throws Exception {
-		LocalDate inicio = LocalDate.now();
-		LocalDate fim = LocalDate.now();
-		LocalTime horario = LocalTime.now();
-		
 		Espetaculo espetaculo = mock(Espetaculo.class);
 		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
 		
@@ -163,10 +166,6 @@ public class EspetaculosControllerTest {
 	
 	@Test
 	public void deveriaAgendarUmaNovaSessaoQuandoOUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
-		LocalDate inicio = LocalDate.now();
-		LocalDate fim = LocalDate.now();
-		LocalTime horario = LocalTime.now();
-		
 		Espetaculo espetaculo = mock(Espetaculo.class);
 		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
 		
@@ -180,10 +179,6 @@ public class EspetaculosControllerTest {
 	
 	@Test
 	public void deveriaAdicionaUmaMensagemDeSucessoQuandoUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
-		LocalDate inicio = LocalDate.now();
-		LocalDate fim = LocalDate.now();
-		LocalTime horario = LocalTime.now();
-		
 		Espetaculo espetaculo = mock(Espetaculo.class);
 		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
 		
@@ -194,5 +189,20 @@ public class EspetaculosControllerTest {
 		
 		verify(result).include("message", sessoes.size() + " sessões criadas com sucesso");
 	}
-	
+
+	@Test
+	public void deveriaRedirecionarParaAListaDeSessoesQuandoUsuarioCadastrarUmaSessaoValida() throws Exception {
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		EspetaculosController spyController = spy(controller);
+		when(result.redirectTo(EspetaculosController.class)).thenReturn(spyController);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(spyController).lista();
+	}
 }
