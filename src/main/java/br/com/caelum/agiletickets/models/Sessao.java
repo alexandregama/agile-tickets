@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -37,8 +38,9 @@ public class Sessao {
 
 	private Integer ingressosReservados = 0;
 
-	private BigDecimal preco;
+	private BigDecimal preco = BigDecimal.ZERO;
 
+	@Transient
 	private BigDecimal precoFinal = BigDecimal.ZERO;
 
 	public Long getId() {
@@ -134,5 +136,8 @@ public class Sessao {
 		
 		return precoParaOEspetaculo.multiply(BigDecimal.valueOf(quantidade));
 	}
-	
+
+	public BigDecimal getPrecoFinal() {
+		return precoFinal;
+	}
 }

@@ -108,7 +108,7 @@ public class EspetaculosController {
 			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
 		}
 		if (!sessao.podeReservar(quantidadeDeIngressosDesejados)) {
-			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
+			validator.add(new SimpleMessage("", "Não existem tantos ingressos, foi mals :("));
 		}
 		
 		validator.onErrorRedirectTo(this).sessao(sessao.getId());
