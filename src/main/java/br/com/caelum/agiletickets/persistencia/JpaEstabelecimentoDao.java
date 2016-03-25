@@ -13,7 +13,7 @@ public class JpaEstabelecimentoDao implements DiretorioDeEstabelecimentos {
 	private EntityManager manager;
 	
 	/** @deprecated CDI eyes only*/
-	JpaEstabelecimentoDao() {
+	protected JpaEstabelecimentoDao() {
 	}
 	
 	@Inject

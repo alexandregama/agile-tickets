@@ -16,7 +16,7 @@ public class JpaEspetaculoDao implements Agenda {
 	private Relogio relogio;
 	
 	/** @deprecated CDI eyes only*/
-	JpaEspetaculoDao() {
+	protected JpaEspetaculoDao() {
 	}
 
 	@Inject

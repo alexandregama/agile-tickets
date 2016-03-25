@@ -25,6 +25,9 @@ public class Sessao {
 
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime inicio;
+	
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime dataCriacao = new DateTime();
 
 	private Integer duracaoEmMinutos;
 
@@ -119,6 +122,10 @@ public class Sessao {
 
 	public BigDecimal getPreco() {
 		return preco;
+	}
+
+	public DateTime getDataCriacao() {
+		return dataCriacao;
 	}
 	
 }

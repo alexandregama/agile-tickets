@@ -1,6 +1,7 @@
 package br.com.caelum.agiletickets.controllers;
 
 import static br.com.caelum.vraptor.view.Results.status;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -11,8 +12,6 @@ import javax.inject.Inject;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-
-import com.google.common.base.Strings;
 
 import br.com.caelum.agiletickets.domain.Agenda;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
@@ -59,13 +58,10 @@ public class EspetaculosController {
 
 	@Post("/espetaculos")
 	public void adiciona(Espetaculo espetaculo) {
-		// aqui eh onde fazemos as varias validacoes
-		// se nao tiver nome, avisa o usuario
-		// se nao tiver descricao, avisa o usuario
-		if (Strings.isNullOrEmpty(espetaculo.getNome())) {
+		if (isNullOrEmpty(espetaculo.getNome())) {
 			validator.add(new SimpleMessage("", "Nome do espetáculo não pode estar em branco"));
 		}
-		if (Strings.isNullOrEmpty(espetaculo.getDescricao())) {
+		if (isNullOrEmpty(espetaculo.getDescricao())) {
 			validator.add(new SimpleMessage("", "Descrição do espetáculo não pode estar em branco"));
 		}
 		validator.onErrorRedirectTo(this).lista();
