@@ -13,6 +13,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import br.com.caelum.agiletickets.domain.precos.CalculadoraDePrecos;
+
 @Entity
 public class Sessao {
 
@@ -127,6 +129,10 @@ public class Sessao {
 		precoFinal = precoFinal.add(preco.multiply(BigDecimal.valueOf(porcentagem)));
 		
 		return precoFinal;
+	}
+
+	public BigDecimal calculaPrecoFinalPara(Integer quantidade) {
+		return CalculadoraDePrecos.calcula(this, quantidade);
 	}
 	
 }

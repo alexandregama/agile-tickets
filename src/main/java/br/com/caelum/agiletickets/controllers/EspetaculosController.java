@@ -15,7 +15,6 @@ import org.joda.time.LocalTime;
 
 import br.com.caelum.agiletickets.domain.Agenda;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
-import br.com.caelum.agiletickets.domain.precos.CalculadoraDePrecos;
 import br.com.caelum.agiletickets.models.Espetaculo;
 import br.com.caelum.agiletickets.models.Periodicidade;
 import br.com.caelum.agiletickets.models.Sessao;
@@ -99,24 +98,24 @@ public class EspetaculosController {
 	}
 	
 	@Post @Path("/sessao/{sessaoId}/reserva")
-	public void reserva(Long sessaoId, final Integer quantidade) {
+	public void reserva(Long sessaoId, final Integer quantidadeDeIngressosDesejados) {
 		Sessao sessao = agenda.sessao(sessaoId);
 		if (sessao == null) {
 			result.notFound();
 			return;
 		}
-		if (quantidade < 1) {
+		if (quantidadeDeIngressosDesejados < 1) {
 			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
 		}
-		if (!sessao.podeReservar(quantidade)) {
+		if (!sessao.podeReservar(quantidadeDeIngressosDesejados)) {
 			validator.add(new SimpleMessage("", "Você deve escolher um lugar ou mais"));
 		}
 		
 		validator.onErrorRedirectTo(this).sessao(sessao.getId());
 
-		BigDecimal precoTotal = CalculadoraDePrecos.calcula(sessao, quantidade);
+		BigDecimal precoTotal = sessao.calculaPrecoFinalPara(quantidadeDeIngressosDesejados);
 
-		sessao.reserva(quantidade);
+		sessao.reserva(quantidadeDeIngressosDesejados);
 
 		result.include("message", "Sessão reservada com sucesso por " + CURRENCY.format(precoTotal));
 
