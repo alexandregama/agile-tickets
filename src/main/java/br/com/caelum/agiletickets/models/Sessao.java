@@ -118,7 +118,7 @@ public class Sessao {
 		return dataCriacao;
 	}
 
-	public BigDecimal acressentaEmPorcentagem(Double porcentagem) {
+	public BigDecimal acressentaNoPrecoAPorcentagemDe(Double porcentagem) {
 		return preco.add(preco.multiply(BigDecimal.valueOf(porcentagem)));
 	}
 	

@@ -8,10 +8,7 @@ public class CalculadoraDePrecosPorTeatro implements CalculadoraDePrecoPorEspeta
 
 	@Override
 	public BigDecimal calcula(Sessao sessao, Integer quantidade) {
-		BigDecimal preco = BigDecimal.ZERO;
-		preco = sessao.getPreco();
-		
-		return preco;
+		return sessao.getPreco();
 	}
 
 }
