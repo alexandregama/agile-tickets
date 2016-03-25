@@ -1,13 +1,18 @@
 package br.com.caelum.agiletickets.controllers;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.caelum.agiletickets.domain.Agenda;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
 import br.com.caelum.agiletickets.models.Espetaculo;
+import br.com.caelum.agiletickets.models.Periodicidade;
 import br.com.caelum.agiletickets.models.Sessao;
 import br.com.caelum.agiletickets.models.TipoDeEspetaculo;
 import br.com.caelum.vraptor.Result;
@@ -134,4 +140,59 @@ public class EspetaculosControllerTest {
 		assertThat(sessao.getIngressosDisponiveis(), is(2));
 	}
 
+	@Test(expected = ValidationException.class)
+	public void deveriaLancarExcecaoDeValidacaoQuandoUsuarioCadastrarUmaSessaoDeEspetaculoQueNaoExiste() throws Exception {
+		controller.cadastraSessoes(12L, LocalDate.now(), LocalDate.now(), LocalTime.now(), Periodicidade.DIARIA);
+		
+		when(agenda.espetaculo(12L)).thenReturn(null);
+	}
+	
+	@Test
+	public void deveriaCriarUmaSessaoQuandoUsuarioCadastrarUmaSessaoValida() throws Exception {
+		LocalDate inicio = LocalDate.now();
+		LocalDate fim = LocalDate.now();
+		LocalTime horario = LocalTime.now();
+		
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		controller.cadastraSessoes(12L, inicio, inicio, horario, Periodicidade.DIARIA);
+		
+		verify(espetaculo).criaSessoes(inicio, fim, horario, Periodicidade.DIARIA);
+	}
+	
+	@Test
+	public void deveriaAgendarUmaNovaSessaoQuandoOUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
+		LocalDate inicio = LocalDate.now();
+		LocalDate fim = LocalDate.now();
+		LocalTime horario = LocalTime.now();
+		
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(agenda).agende(sessoes);
+	}
+	
+	@Test
+	public void deveriaAdicionaUmaMensagemDeSucessoQuandoUsuarioCadastrarUmaNovaSessaoValida() throws Exception {
+		LocalDate inicio = LocalDate.now();
+		LocalDate fim = LocalDate.now();
+		LocalTime horario = LocalTime.now();
+		
+		Espetaculo espetaculo = mock(Espetaculo.class);
+		when(agenda.espetaculo(12L)).thenReturn(espetaculo);
+		
+		List<Sessao> sessoes = asList(new Sessao());
+		when(espetaculo.criaSessoes(inicio, fim, horario, Periodicidade.SEMANAL)).thenReturn(sessoes);
+		
+		controller.cadastraSessoes(12L, inicio, fim, horario, Periodicidade.SEMANAL);
+		
+		verify(result).include("message", sessoes.size() + " sessões criadas com sucesso");
+	}
+	
 }
