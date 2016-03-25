@@ -9,8 +9,11 @@ public class CalculadoraDePrecoPorShowECinema implements CalculadoraDePrecoPorEs
 	@Override
 	public BigDecimal calcula(Sessao sessao, Integer quantidade) {
 		BigDecimal preco = BigDecimal.ZERO;
-		if((sessao.getTotalIngressos() - sessao.getIngressosReservados()) / sessao.getTotalIngressos().doubleValue() <= 0.05) { 
-			preco = sessao.getPreco().add(sessao.getPreco().multiply(BigDecimal.valueOf(0.10)));
+		int ingressosSobrando = sessao.getTotalIngressos() - sessao.getIngressosReservados();
+		double totalDeIngressos = sessao.getTotalIngressos().doubleValue();
+
+		if (ingressosSobrando / totalDeIngressos <= 0.05) {
+			preco = sessao.acressentaEmPorcentagem(0.10);
 		} else {
 			preco = sessao.getPreco();
 		}

@@ -117,5 +117,9 @@ public class Sessao {
 	public DateTime getDataCriacao() {
 		return dataCriacao;
 	}
+
+	public BigDecimal acressentaEmPorcentagem(Double porcentagem) {
+		return preco.add(preco.multiply(BigDecimal.valueOf(porcentagem)));
+	}
 	
 }

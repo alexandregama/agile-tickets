@@ -1,8 +1,11 @@
 package br.com.caelum.agiletickets.models;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.math.BigDecimal;
 
 import org.junit.Test;
 
@@ -39,6 +42,16 @@ public class SessaoTest {
 
 		sessao.reserva(3);
 		assertEquals(2, sessao.getIngressosDisponiveis().intValue());
+	}
+
+	@Test
+	public void deveriaAcrescentarUmaPorcentagemAoValorOriginalDaSessao() throws Exception {
+		Sessao sessao = new Sessao();
+		sessao.setPreco(BigDecimal.TEN);
+		
+		BigDecimal novoPreco = sessao.acressentaEmPorcentagem(0.10);
+		
+		assertThat(novoPreco).isEqualTo(BigDecimal.valueOf((11.0)));
 	}
 	
 }
